@@ -1,0 +1,42 @@
+from abc import abstractmethod
+from typing import List
+
+from engine.Exceptions.ExFileNotProvided import ExFileNotProvided
+from engine.Exceptions.ExNoData import ExNoData
+
+
+class Challenge:
+    def __init__(self, filename=None):
+        self.__filename = filename
+
+        if self.__filename is not None:
+            self.data = self.load_data(self.__filename)
+
+    def load_data(self, name_input: str = None) -> List[str]:
+        if name_input is not None:
+            filename = self.__filename = name_input
+        elif self.__filename is not None:
+            filename = self.__filename
+        else:
+            raise ExFileNotProvided()
+
+        with open(filename, "r") as file:
+            self.data = [r.strip() for r in file.readlines()]
+            return self.data
+
+    def interpret_data(self, data_inj: List[str] = None):
+        if data_inj is not None:
+            data = self.data = data_inj
+        elif self.data is not None:
+            data = self.data
+        else:
+            raise ExNoData()
+
+        for y in range(len(data)):
+            data[y] = data[y].strip()
+
+        return data
+
+    @abstractmethod
+    def run(self):
+        ...
